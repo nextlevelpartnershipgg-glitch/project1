@@ -1,0 +1,17 @@
+services:
+  bot:
+    build: .
+    env_file: .env
+    volumes:
+      - ./:/app
+    depends_on:
+      - ollama
+    restart: unless-stopped
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    command: ["/bin/sh","-c","ollama serve & sleep 3 && ollama pull llama3.1:8b-instruct-q4_K_M && tail -f /dev/null"]
+    restart: unless-stopped
